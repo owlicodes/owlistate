@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { Toaster } from "@/components/ui/toaster";
 import { Dialog } from "@/features/common/components/dialog";
+import { QueryProvider } from "@/features/common/providers/query-provider";
 
 import "./globals.css";
 
@@ -24,10 +25,12 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen w-full antialiased">
-        <Dialog />
-        <Toaster />
+        <QueryProvider>
+          <Dialog />
+          <Toaster />
 
-        <main>{children}</main>
+          <main>{children}</main>
+        </QueryProvider>
       </body>
     </html>
   );
