@@ -41,7 +41,7 @@ export const Header = async () => {
               <span className="text-2xl font-bold text-primary">Owlistate</span>
             </Link>
           </div>
-          <nav className="hidden space-x-4 md:flex">
+          <nav className="hidden space-x-4 lg:flex">
             {navItems.map((item) => (
               <Link
                 key={item.name}
@@ -52,23 +52,31 @@ export const Header = async () => {
               </Link>
             ))}
           </nav>
-          <div className="hidden items-center space-x-2 md:flex">
+          <div className="hidden items-center space-x-2 lg:flex">
             {!session?.user ? (
               <>
                 <SignInButton />
                 <SignUpButton />
               </>
             ) : (
-              <SignOutButton />
+              <div className="space-x-4">
+                <Link
+                  href="/"
+                  className="inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+                >
+                  Dashboard
+                </Link>
+                <SignOutButton />
+              </div>
             )}
           </div>
-          <div className="md:hidden">
+          <div className="lg:hidden">
             <Sheet>
               <SheetTrigger asChild>
                 <Button
                   variant="outline"
                   size="icon"
-                  className="md:hidden"
+                  className="lg:hidden"
                   aria-label="Menu"
                 >
                   <Menu className="h-6 w-6" />
@@ -96,7 +104,15 @@ export const Header = async () => {
                         <SignUpButton />
                       </>
                     ) : (
-                      <SignOutButton />
+                      <div className="space-x-4">
+                        <Link
+                          href="/"
+                          className="inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+                        >
+                          Dashboard
+                        </Link>
+                        <SignOutButton />
+                      </div>
                     )}
                   </div>
                 </nav>
