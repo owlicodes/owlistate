@@ -11,6 +11,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { SignInButton } from "@/features/auth/components/sign-in-button";
 
 export const Header = () => {
   const navItems = [
@@ -44,7 +45,7 @@ export const Header = () => {
             ))}
           </nav>
           <div className="hidden items-center space-x-2 md:flex">
-            <Button variant="outline">Sign In</Button>
+            <SignInButton />
             <Button>Sign Up</Button>
           </div>
           <div className="md:hidden">
@@ -75,7 +76,7 @@ export const Header = () => {
                     </Link>
                   ))}
                   <div className="mt-4 flex flex-col space-y-2">
-                    <Button variant="outline">Sign In</Button>
+                    <SignInButton />
                     <Button>Sign Up</Button>
                   </div>
                 </nav>

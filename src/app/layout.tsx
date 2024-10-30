@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { Toaster } from "@/components/ui/toaster";
 import { Dialog } from "@/features/common/components/dialog";
 import { Header } from "@/features/common/components/header";
 
@@ -25,6 +26,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen w-full antialiased">
         <Dialog />
+        <Toaster />
 
         <Header />
 
