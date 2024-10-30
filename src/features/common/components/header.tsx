@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/sheet";
 import { SignInButton } from "@/features/auth/components/sign-in-button";
 import { SignOutButton } from "@/features/auth/components/sign-out-button";
+import { SignUpButton } from "@/features/auth/components/sign-up-button";
 import { auth } from "@/lib/auth";
 
 export const Header = async () => {
@@ -55,7 +56,7 @@ export const Header = async () => {
             {!session?.user ? (
               <>
                 <SignInButton />
-                <Button>Sign Up</Button>
+                <SignUpButton />
               </>
             ) : (
               <SignOutButton />
@@ -92,7 +93,7 @@ export const Header = async () => {
                     {!session?.user ? (
                       <>
                         <SignInButton />
-                        <Button>Sign Up</Button>
+                        <SignUpButton />
                       </>
                     ) : (
                       <SignOutButton />
