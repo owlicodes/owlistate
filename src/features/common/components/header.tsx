@@ -1,4 +1,5 @@
 import { Route } from "next";
+import { headers } from "next/headers";
 import Link from "next/link";
 
 import { Menu } from "lucide-react";
@@ -12,8 +13,14 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { SignInButton } from "@/features/auth/components/sign-in-button";
+import { SignOutButton } from "@/features/auth/components/sign-out-button";
+import { auth } from "@/lib/auth";
 
-export const Header = () => {
+export const Header = async () => {
+  const session = await auth.api.getSession({
+    headers: headers(),
+  });
+
   const navItems = [
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
@@ -45,8 +52,14 @@ export const Header = () => {
             ))}
           </nav>
           <div className="hidden items-center space-x-2 md:flex">
-            <SignInButton />
-            <Button>Sign Up</Button>
+            {!session?.user ? (
+              <>
+                <SignInButton />
+                <Button>Sign Up</Button>
+              </>
+            ) : (
+              <SignOutButton />
+            )}
           </div>
           <div className="md:hidden">
             <Sheet>
@@ -76,8 +89,14 @@ export const Header = () => {
                     </Link>
                   ))}
                   <div className="mt-4 flex flex-col space-y-2">
-                    <SignInButton />
-                    <Button>Sign Up</Button>
+                    {!session?.user ? (
+                      <>
+                        <SignInButton />
+                        <Button>Sign Up</Button>
+                      </>
+                    ) : (
+                      <SignOutButton />
+                    )}
                   </div>
                 </nav>
               </SheetContent>

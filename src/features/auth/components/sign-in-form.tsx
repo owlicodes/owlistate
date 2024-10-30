@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { SubmitButton } from "@/features/common/components/submit-button";
 import { useToast } from "@/hooks/use-toast";
 import { client } from "@/lib/client";
+import useDialogConfigStore from "@/stores/dialog-store";
 
 const formSchema = z.object({
   email: z
@@ -46,6 +47,7 @@ export const SignInForm = () => {
   });
   const { toast } = useToast();
   const router = useRouter();
+  const { setDialogConfig } = useDialogConfigStore();
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     await client.signIn.email(
@@ -58,6 +60,7 @@ export const SignInForm = () => {
         },
         onSuccess: () => {
           setIsPending(false);
+          setDialogConfig(undefined);
           router.refresh();
         },
         onError: (ctx) => {
