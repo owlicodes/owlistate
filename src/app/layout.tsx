@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
-import { Header } from "@/features/components/header";
+import { Dialog } from "@/features/common/components/dialog";
+import { Header } from "@/features/common/components/header";
 
 import "./globals.css";
 
@@ -23,6 +24,8 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen w-full antialiased">
+        <Dialog />
+
         <Header />
 
         <main className="container mx-auto mt-8 px-4 sm:px-6 lg:px-8">
