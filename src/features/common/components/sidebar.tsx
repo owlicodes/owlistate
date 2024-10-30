@@ -1,8 +1,17 @@
-import { Home, LayoutDashboard } from "lucide-react";
+import { headers } from "next/headers";
 
+import { Blocks, ChevronUp, Home, LayoutDashboard, User2 } from "lucide-react";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Sidebar as ShadSidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -10,6 +19,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { SignOutButton } from "@/features/auth/components/sign-out-button";
+import { auth } from "@/lib/auth";
 
 const items = [
   {
@@ -22,9 +33,18 @@ const items = [
     url: "/admin/dashboard",
     icon: LayoutDashboard,
   },
+  {
+    title: "Projects",
+    url: "/admin/projects",
+    icon: Blocks,
+  },
 ];
 
-export function Sidebar() {
+export const Sidebar = async () => {
+  const session = await auth.api.getSession({
+    headers: headers(),
+  });
+
   return (
     <ShadSidebar>
       <SidebarContent className="bg-secondary">
@@ -46,6 +66,28 @@ export function Sidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton>
+                  <User2 /> {session?.user.name}
+                  <ChevronUp className="ml-auto" />
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                side="top"
+                className="w-[--radix-popper-anchor-width]"
+              >
+                <DropdownMenuItem>
+                  <SignOutButton />
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </ShadSidebar>
   );
-}
+};

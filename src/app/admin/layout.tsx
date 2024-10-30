@@ -9,12 +9,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   return (
     <SidebarProvider>
       <Sidebar />
-
-      <div>
-        <SidebarTrigger />
-
-        <div className="w-full p-4">{children}</div>
-      </div>
+      <SidebarTrigger />
+      <div className="w-full p-4">{children}</div>
     </SidebarProvider>
   );
 }
