@@ -44,6 +44,18 @@ const formSchema = z
       .min(0.01, "Maximum price must be greater than 0.")
       .max(9999999.99, "Maximum price cannot exceed 9,999,999.99.")
       .transform((val) => parseFloat(val.toFixed(2))),
+    imageUrl: z
+      .string()
+      .trim()
+      .min(1, {
+        message: "Image url is required.",
+      })
+      .url({
+        message: "Invalid url.",
+      }),
+    imageKey: z.string().trim().min(1, {
+      message: "Image key is required.",
+    }),
   })
   .refine((data) => data.minPrice <= data.maxPrice, {
     message: "Minimum price cannot be greater than maximum price.",
@@ -58,6 +70,8 @@ export const ProjectForm = ({ data }: { data?: TProject }) => {
       location: data ? data.location : "",
       minPrice: data ? data.minPrice : 0,
       maxPrice: data ? data.maxPrice : 0,
+      imageUrl: data?.imageUrl ? data.imageUrl : "",
+      imageKey: data?.imageKey ? data.imageKey : "",
     },
   });
   const { toast } = useToast();
@@ -160,6 +174,32 @@ export const ProjectForm = ({ data }: { data?: TProject }) => {
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel>Maximum Price</FormLabel>
+              <FormControl>
+                <Input autoComplete="off" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="imageUrl"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Image URL</FormLabel>
+              <FormControl>
+                <Input autoComplete="off" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="imageKey"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Image Key</FormLabel>
               <FormControl>
                 <Input autoComplete="off" {...field} />
               </FormControl>
