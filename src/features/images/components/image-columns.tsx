@@ -1,9 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, Trash } from "lucide-react";
+import { Copy, MoreHorizontal, Trash } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -25,6 +26,32 @@ export const columns: ColumnDef<TImage>[] = [
   {
     accessorKey: "key",
     header: "Image Key",
+    cell: ({ row }) => {
+      const image = row.original;
+      const [isCopied, setIsCopied] = useState(false);
+
+      const copyToClipboard = async () => {
+        await navigator.clipboard.writeText(image.key);
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), 500);
+      };
+
+      return (
+        <div className="flex items-center gap-2">
+          <span>{image.key}</span>
+          <Button
+            variant="outline"
+            onClick={copyToClipboard}
+            disabled={isCopied}
+            aria-label="Copy to clipboard"
+            className="flex items-center space-x-2"
+          >
+            <Copy className="h-4 w-4" />
+            <span>{isCopied ? "Copied!" : "Copy"}</span>
+          </Button>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "name",
