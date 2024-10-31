@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { MapPin } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,9 +14,12 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
   return (
     <Card className="overflow-hidden shadow-md">
       <CardHeader className="p-0">
-        <img
+        <Image
           src={`https://utfs.io/f/${project.imageKey}`}
           alt={project.name}
+          objectFit="cover"
+          height={300}
+          width={300}
           className="h-48 w-full object-cover"
         />
       </CardHeader>
