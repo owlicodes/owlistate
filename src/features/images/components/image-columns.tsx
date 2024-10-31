@@ -12,9 +12,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { DeleteContent } from "@/features/common/components/delete-content";
 import { useToast } from "@/hooks/use-toast";
 import useDialogConfigStore from "@/stores/dialog-store";
 import { TImage } from "@/types";
+
+import { useDeleteImage } from "../apis/use-delete-image";
 
 /* eslint-disable react-hooks/rules-of-hooks */
 
@@ -34,26 +37,27 @@ export const columns: ColumnDef<TImage>[] = [
       const { setDialogConfig } = useDialogConfigStore();
       const { toast } = useToast();
       const router = useRouter();
+      const deleteImage = useDeleteImage();
 
       const deleteCallback = () => {
-        // deleteProject.mutate(project.id, {
-        //   onSuccess: (data) => {
-        //     toast({
-        //       title: "Delete Project",
-        //       description: data.message,
-        //     });
-        //     router.refresh();
-        //     setDialogConfig(undefined);
-        //   },
-        //   onError: (error) => {
-        //     toast({
-        //       title: "Delete Project",
-        //       description: error.message,
-        //       variant: "destructive",
-        //     });
-        //     setDialogConfig(undefined);
-        //   },
-        // });
+        deleteImage.mutate(image.key, {
+          onSuccess: (data) => {
+            toast({
+              title: "Delete Image",
+              description: data.message,
+            });
+            router.refresh();
+            setDialogConfig(undefined);
+          },
+          onError: (error) => {
+            toast({
+              title: "Delete Image",
+              description: error.message,
+              variant: "destructive",
+            });
+            setDialogConfig(undefined);
+          },
+        });
       };
 
       const showDeleteProjectConfirmation = () => {
@@ -61,7 +65,7 @@ export const columns: ColumnDef<TImage>[] = [
           open: true,
           title: "Delete Image",
           description: image.name,
-          content: <h1>Content</h1>,
+          content: <DeleteContent deleteCallback={deleteCallback} />,
         });
       };
 
