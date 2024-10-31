@@ -10,7 +10,7 @@ type ProjectCardProps = {
 
 export const ProjectCard = ({ project }: ProjectCardProps) => {
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden shadow-md">
       <CardHeader className="p-0">
         <img
           src={`https://utfs.io/f/${project.imageKey}`}
