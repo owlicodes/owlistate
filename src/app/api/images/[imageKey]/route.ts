@@ -25,7 +25,6 @@ export async function DELETE(request: Request, { params }: Params) {
       );
     }
 
-    console.log("joms imageKey:", imageKey);
     await utapi.deleteFiles(imageKey);
 
     return NextResponse.json({

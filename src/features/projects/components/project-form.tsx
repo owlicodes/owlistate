@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -44,15 +45,6 @@ const formSchema = z
       .min(0.01, "Maximum price must be greater than 0.")
       .max(9999999.99, "Maximum price cannot exceed 9,999,999.99.")
       .transform((val) => parseFloat(val.toFixed(2))),
-    imageUrl: z
-      .string()
-      .trim()
-      .min(1, {
-        message: "Image url is required.",
-      })
-      .url({
-        message: "Invalid url.",
-      }),
     imageKey: z.string().trim().min(1, {
       message: "Image key is required.",
     }),
@@ -70,7 +62,6 @@ export const ProjectForm = ({ data }: { data?: TProject }) => {
       location: data ? data.location : "",
       minPrice: data ? data.minPrice : 0,
       maxPrice: data ? data.maxPrice : 0,
-      imageUrl: data?.imageUrl ? data.imageUrl : "",
       imageKey: data?.imageKey ? data.imageKey : "",
     },
   });
@@ -87,6 +78,7 @@ export const ProjectForm = ({ data }: { data?: TProject }) => {
     });
 
     router.refresh();
+    form.reset();
     setDialogConfig(undefined);
   };
 
@@ -149,51 +141,40 @@ export const ProjectForm = ({ data }: { data?: TProject }) => {
             <FormItem>
               <FormLabel>Location</FormLabel>
               <FormControl>
-                <Textarea rows={5} className="resize-none" {...field} />
+                <Textarea rows={3} className="resize-none" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="minPrice"
-          render={({ field }) => (
-            <FormItem className="w-full">
-              <FormLabel>Minimum Price</FormLabel>
-              <FormControl>
-                <Input autoComplete="off" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="maxPrice"
-          render={({ field }) => (
-            <FormItem className="w-full">
-              <FormLabel>Maximum Price</FormLabel>
-              <FormControl>
-                <Input autoComplete="off" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="imageUrl"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Image URL</FormLabel>
-              <FormControl>
-                <Input autoComplete="off" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="flex items-center gap-4">
+          <FormField
+            control={form.control}
+            name="minPrice"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Minimum Price</FormLabel>
+                <FormControl>
+                  <Input autoComplete="off" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="maxPrice"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Maximum Price</FormLabel>
+                <FormControl>
+                  <Input autoComplete="off" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
         <FormField
           control={form.control}
           name="imageKey"
@@ -210,6 +191,17 @@ export const ProjectForm = ({ data }: { data?: TProject }) => {
         <SubmitButton
           isPending={createProject.isPending || updateProject.isPending}
         />
+        {form.getValues("imageKey") && (
+          <div className="mx-auto max-w-2xl">
+            <Image
+              src={`https://utfs.io/f/${form.getValues("imageKey")}`}
+              alt={form.getValues("name")}
+              width={400}
+              height={300}
+              className="h-auto w-full object-cover"
+            />
+          </div>
+        )}
       </form>
     </Form>
   );

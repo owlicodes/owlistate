@@ -11,6 +11,38 @@ interface Params {
   };
 }
 
+export async function GET(request: Request, { params }: Params) {
+  try {
+    const { projectId } = params;
+
+    const session = await auth.api.getSession({
+      headers: headers(),
+    });
+
+    if (session?.user.role !== "admin") {
+      return NextResponse.json(
+        { message: "User not authorized to perform this action" },
+        { status: 401 }
+      );
+    }
+
+    const project = await prisma.project.findFirst({
+      where: {
+        id: projectId,
+      },
+    });
+
+    return NextResponse.json(project);
+  } catch (error: unknown) {
+    console.log("Fetch project failed: ", error);
+
+    return NextResponse.json(
+      { message: "Unable to fetch project, please see server logs." },
+      { status: 500 }
+    );
+  }
+}
+
 export async function PATCH(request: Request, { params }: Params) {
   try {
     const { projectId } = params;

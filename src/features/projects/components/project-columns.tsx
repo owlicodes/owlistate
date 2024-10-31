@@ -20,7 +20,6 @@ import useDialogConfigStore from "@/stores/dialog-store";
 import { TProject } from "@/types";
 
 import { useDeleteProject } from "../apis/use-delete-project";
-import { ProjectForm } from "./project-form";
 
 /* eslint-disable react-hooks/rules-of-hooks */
 
@@ -94,12 +93,7 @@ export const columns: ColumnDef<TProject>[] = [
       };
 
       const showEditProjectForm = () => {
-        setDialogConfig({
-          open: true,
-          title: "Edit Project",
-          description: project.name,
-          content: <ProjectForm data={project} />,
-        });
+        router.push(`/admin/projects/edit/${project.id}`);
       };
 
       const showDeleteProjectConfirmation = () => {

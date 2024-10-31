@@ -73,8 +73,7 @@ model Project {
   location  String
   minPrice  Int
   maxPrice  Int
-  imageUrl  String?
-  imageKey  String?
+  imageKey  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
