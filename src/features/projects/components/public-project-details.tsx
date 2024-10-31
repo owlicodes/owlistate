@@ -37,7 +37,6 @@ export const PublicProjectDetails = ({
                 src={`https://utfs.io/f/${project.imageKey}`}
                 alt={project.name}
                 layout="fill"
-                objectFit="cover"
                 className="transition-all duration-300 hover:scale-105"
               />
             </div>

@@ -17,7 +17,6 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
         <Image
           src={`https://utfs.io/f/${project.imageKey}`}
           alt={project.name}
-          objectFit="cover"
           height={300}
           width={300}
           className="h-48 w-full object-cover"
