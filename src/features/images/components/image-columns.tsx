@@ -47,7 +47,7 @@ export const columns: ColumnDef<TImage>[] = [
             className="flex items-center space-x-2"
           >
             <Copy className="h-4 w-4" />
-            <span>{isCopied ? "Copied!" : "Copy"}</span>
+            {isCopied && <span>Copied</span>}
           </Button>
         </div>
       );
