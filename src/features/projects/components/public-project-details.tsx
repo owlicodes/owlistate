@@ -63,7 +63,7 @@ export const PublicProjectDetails = ({
               <div className="flex items-center">
                 <HandCoins className="mr-2 h-5 w-5 text-primary" />
                 <span className="font-semibold">
-                  {formatCurrency(project.minPrice)} -
+                  {formatCurrency(project.minPrice)} -{" "}
                   {formatCurrency(project.maxPrice)}
                 </span>
               </div>
