@@ -1,6 +1,13 @@
 import { headers } from "next/headers";
 
-import { Blocks, ChevronUp, Home, LayoutDashboard, User2 } from "lucide-react";
+import {
+  Blocks,
+  ChevronUp,
+  Home,
+  Images,
+  LayoutDashboard,
+  User2,
+} from "lucide-react";
 
 import {
   DropdownMenu,
@@ -37,6 +44,11 @@ const items = [
     title: "Projects",
     url: "/admin/projects",
     icon: Blocks,
+  },
+  {
+    title: "Images",
+    url: "/admin/images",
+    icon: Images,
   },
 ];
 
