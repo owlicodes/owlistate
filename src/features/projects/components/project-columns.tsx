@@ -11,6 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { formatCurrency } from "@/lib/utils";
 import { TProject } from "@/types";
 
 /* eslint-disable react-hooks/rules-of-hooks */
@@ -23,6 +24,26 @@ export const columns: ColumnDef<TProject>[] = [
   {
     accessorKey: "location",
     header: "Location",
+  },
+  {
+    accessorKey: "minPrice",
+    header: "Minimum Price",
+    cell: ({ row }) => {
+      const project = row.original;
+      const formatted = formatCurrency(project.minPrice);
+
+      return <div>{formatted}</div>;
+    },
+  },
+  {
+    accessorKey: "maxPrice",
+    header: "Maximum Price",
+    cell: ({ row }) => {
+      const project = row.original;
+      const formatted = formatCurrency(project.maxPrice);
+
+      return <div>{formatted}</div>;
+    },
   },
   {
     accessorKey: "createdAt",
