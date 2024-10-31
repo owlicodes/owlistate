@@ -10,6 +10,7 @@ import { z } from "zod";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -30,8 +31,14 @@ const formSchema = z
     name: z.string().trim().min(1, {
       message: "Name is required.",
     }),
+    overview: z.string().trim().min(1, {
+      message: "Overview is required.",
+    }),
     location: z.string().trim().min(1, {
       message: "Location is required.",
+    }),
+    keyLocations: z.string().trim().min(1, {
+      message: "Key locations is required.",
     }),
     minPrice: z.coerce
       .number()
@@ -42,8 +49,17 @@ const formSchema = z
     maxPrice: z.coerce
       .number()
       .positive()
-      .min(0.01, "Maximum price must be greater than 0.")
+      .min(0.01, "Minimum price must be greater than 0.")
       .max(9999999.99, "Maximum price cannot exceed 9,999,999.99.")
+      .transform((val) => parseFloat(val.toFixed(2))),
+    amenities: z.string().trim().min(1, {
+      message: "Amenities is required.",
+    }),
+    totalUnits: z.coerce
+      .number()
+      .positive()
+      .min(1, "Minimum total unit must be greater than 0.")
+      .max(10000, "Maximum total units exceeds 10,000.")
       .transform((val) => parseFloat(val.toFixed(2))),
     imageKey: z.string().trim().min(1, {
       message: "Image key is required.",
@@ -59,9 +75,13 @@ export const ProjectForm = ({ data }: { data?: TProject }) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: data ? data.name : "",
+      overview: data ? data.overview : "",
       location: data ? data.location : "",
+      keyLocations: data ? data.keyLocations : "",
       minPrice: data ? data.minPrice : 0,
       maxPrice: data ? data.maxPrice : 0,
+      amenities: data ? data.amenities : "",
+      totalUnits: data ? data.totalUnits : 0,
       imageKey: data?.imageKey ? data.imageKey : "",
     },
   });
@@ -136,13 +156,43 @@ export const ProjectForm = ({ data }: { data?: TProject }) => {
         />
         <FormField
           control={form.control}
+          name="overview"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Overview</FormLabel>
+              <FormControl>
+                <Textarea rows={5} className="resize-none" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
           name="location"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Location</FormLabel>
               <FormControl>
-                <Textarea rows={3} className="resize-none" {...field} />
+                <Input autoComplete="off" {...field} />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="keyLocations"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Key Locations</FormLabel>
+              <FormControl>
+                <Textarea rows={5} className="resize-none" {...field} />
+              </FormControl>
+              <FormDescription>
+                Each key location should be comma separated. Example: 7km away
+                from Hospital, 5km away from School
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -175,6 +225,36 @@ export const ProjectForm = ({ data }: { data?: TProject }) => {
             )}
           />
         </div>
+        <FormField
+          control={form.control}
+          name="amenities"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Amenities</FormLabel>
+              <FormControl>
+                <Textarea rows={5} className="resize-none" {...field} />
+              </FormControl>
+              <FormDescription>
+                Each amenity should be comma separated. Example: Club House, Gym
+                Area
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="totalUnits"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Total Units</FormLabel>
+              <FormControl>
+                <Input autoComplete="off" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="imageKey"
