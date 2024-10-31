@@ -6,3 +6,9 @@ export type TCreateProject = Omit<
   "id" | "userId" | "createdAt" | "updatedAt"
 >;
 export type TUpdateProject = TCreateProject;
+
+export type TImage = {
+  id: string;
+  key: string;
+  name: string;
+};

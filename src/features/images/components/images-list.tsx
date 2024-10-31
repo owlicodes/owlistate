@@ -1,20 +1,13 @@
-"use client";
+import { DataTable } from "@/features/common/components/data-table";
+import { utapi } from "@/server/uploadthing";
+import { TImage } from "@/types";
 
-import { UploadButton } from "@/lib/uploadthing";
+import { columns } from "./image-columns";
 
-export const ImagesList = () => {
+export const ImagesList = async () => {
+  const { files } = await utapi.listFiles();
+
   return (
-    <UploadButton
-      endpoint="imageUploader"
-      onClientUploadComplete={(res) => {
-        // Do something with the response
-        console.log("Files: ", res);
-        alert("Upload Completed");
-      }}
-      onUploadError={(error: Error) => {
-        // Do something with the error.
-        alert(`ERROR! ${error.message}`);
-      }}
-    />
+    <DataTable columns={columns} data={files as unknown as Array<TImage>} />
   );
 };
