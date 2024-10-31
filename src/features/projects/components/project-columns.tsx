@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
@@ -11,10 +13,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { DeleteContent } from "@/features/common/components/delete-content";
+import { useToast } from "@/hooks/use-toast";
 import { formatCurrency } from "@/lib/utils";
 import useDialogConfigStore from "@/stores/dialog-store";
 import { TProject } from "@/types";
 
+import { useDeleteProject } from "../apis/use-delete-project";
 import { ProjectForm } from "./project-form";
 
 /* eslint-disable react-hooks/rules-of-hooks */
@@ -63,6 +68,30 @@ export const columns: ColumnDef<TProject>[] = [
     cell: ({ row }) => {
       const project = row.original;
       const { setDialogConfig } = useDialogConfigStore();
+      const deleteProject = useDeleteProject();
+      const { toast } = useToast();
+      const router = useRouter();
+
+      const deleteCallback = () => {
+        deleteProject.mutate(project.id, {
+          onSuccess: (data) => {
+            toast({
+              title: "Delete Project",
+              description: data.message,
+            });
+            router.refresh();
+            setDialogConfig(undefined);
+          },
+          onError: (error) => {
+            toast({
+              title: "Delete Project",
+              description: error.message,
+              variant: "destructive",
+            });
+            setDialogConfig(undefined);
+          },
+        });
+      };
 
       const showEditProjectForm = () => {
         setDialogConfig({
@@ -70,6 +99,15 @@ export const columns: ColumnDef<TProject>[] = [
           title: "Edit Project",
           description: project.name,
           content: <ProjectForm data={project} />,
+        });
+      };
+
+      const showDeleteProjectConfirmation = () => {
+        setDialogConfig({
+          open: true,
+          title: "Delete Project",
+          description: project.name,
+          content: <DeleteContent deleteCallback={deleteCallback} />,
         });
       };
 
@@ -91,7 +129,10 @@ export const columns: ColumnDef<TProject>[] = [
                 <span>Edit</span>
               </div>
             </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer" onClick={() => {}}>
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={showDeleteProjectConfirmation}
+            >
               <div className="flex items-center gap-2 text-red-500">
                 <Trash className="h-4 w-4" />
                 <span>Delete</span>

@@ -48,3 +48,37 @@ export async function PATCH(request: Request, { params }: Params) {
     );
   }
 }
+
+export async function DELETE(request: Request, { params }: Params) {
+  try {
+    const { projectId } = params;
+
+    const session = await auth.api.getSession({
+      headers: headers(),
+    });
+
+    if (session?.user.role !== "admin") {
+      return NextResponse.json(
+        { message: "User not authorized to perform this action" },
+        { status: 401 }
+      );
+    }
+
+    await prisma.project.delete({
+      where: {
+        id: projectId,
+      },
+    });
+
+    return NextResponse.json({
+      message: "Project deleted successfully",
+    });
+  } catch (error: unknown) {
+    console.log("Delete project failed: ", error);
+
+    return NextResponse.json(
+      { message: "Unable to delete project, please see server logs." },
+      { status: 500 }
+    );
+  }
+}
