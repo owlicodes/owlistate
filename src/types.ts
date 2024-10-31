@@ -5,3 +5,4 @@ export type TCreateProject = Omit<
   Project,
   "id" | "userId" | "createdAt" | "updatedAt"
 >;
+export type TUpdateProject = TCreateProject;

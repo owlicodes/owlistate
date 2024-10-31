@@ -12,7 +12,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { formatCurrency } from "@/lib/utils";
+import useDialogConfigStore from "@/stores/dialog-store";
 import { TProject } from "@/types";
+
+import { ProjectForm } from "./project-form";
 
 /* eslint-disable react-hooks/rules-of-hooks */
 
@@ -59,7 +62,16 @@ export const columns: ColumnDef<TProject>[] = [
     id: "actions",
     cell: ({ row }) => {
       const project = row.original;
-      console.log({ project });
+      const { setDialogConfig } = useDialogConfigStore();
+
+      const showEditProjectForm = () => {
+        setDialogConfig({
+          open: true,
+          title: "Edit Project",
+          description: project.name,
+          content: <ProjectForm data={project} />,
+        });
+      };
 
       return (
         <DropdownMenu>
@@ -70,7 +82,10 @@ export const columns: ColumnDef<TProject>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem className="cursor-pointer" onClick={() => {}}>
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={showEditProjectForm}
+            >
               <div className="flex items-center gap-2">
                 <Edit className="h-4 w-4" />
                 <span>Edit</span>

@@ -22,6 +22,7 @@ import useDialogConfigStore from "@/stores/dialog-store";
 import { TProject } from "@/types";
 
 import { useCreateProject } from "../apis/use-create-project";
+import { useUpdateProject } from "../apis/use-update-project";
 
 const formSchema = z
   .object({
@@ -62,6 +63,7 @@ export const ProjectForm = ({ data }: { data?: TProject }) => {
   const { toast } = useToast();
   const router = useRouter();
   const createProject = useCreateProject();
+  const updateProject = useUpdateProject();
   const { setDialogConfig } = useDialogConfigStore();
 
   const onSuccessHandler = (title: string, description: string) => {
@@ -83,14 +85,31 @@ export const ProjectForm = ({ data }: { data?: TProject }) => {
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    createProject.mutate(values, {
-      onSuccess: (data) => {
-        onSuccessHandler("Create Project", data.message);
-      },
-      onError: (error) => {
-        onErrorHandler("Create Project", error.message);
-      },
-    });
+    if (!data) {
+      createProject.mutate(values, {
+        onSuccess: (data) => {
+          onSuccessHandler("Create Project", data.message);
+        },
+        onError: (error) => {
+          onErrorHandler("Create Project", error.message);
+        },
+      });
+    } else {
+      updateProject.mutate(
+        {
+          projectId: data.id,
+          data: values,
+        },
+        {
+          onSuccess: (data) => {
+            onSuccessHandler("Update Project", data.message);
+          },
+          onError: (error) => {
+            onErrorHandler("Update Project", error.message);
+          },
+        }
+      );
+    }
   };
 
   return (
@@ -148,7 +167,9 @@ export const ProjectForm = ({ data }: { data?: TProject }) => {
             </FormItem>
           )}
         />
-        <SubmitButton isPending={createProject.isPending} />
+        <SubmitButton
+          isPending={createProject.isPending || updateProject.isPending}
+        />
       </form>
     </Form>
   );
