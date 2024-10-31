@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/sheet";
 import { SignInButton } from "@/features/auth/components/sign-in-button";
 import { SignOutButton } from "@/features/auth/components/sign-out-button";
-import { SignUpButton } from "@/features/auth/components/sign-up-button";
 import { auth } from "@/lib/auth";
 
 export const Header = async () => {
@@ -56,16 +55,24 @@ export const Header = async () => {
             {!session?.user ? (
               <>
                 <SignInButton />
-                <SignUpButton />
               </>
             ) : (
               <div className="space-x-4">
-                <Link
-                  href="/admin/dashboard"
-                  className="inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
-                >
-                  Dashboard
-                </Link>
+                {session.user.role === "admin" ? (
+                  <Link
+                    href="/admin/dashboard"
+                    className="inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+                  >
+                    Dashboard
+                  </Link>
+                ) : (
+                  <Link
+                    href="/buyer/dashboard"
+                    className="inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+                  >
+                    Dashboard
+                  </Link>
+                )}
                 <SignOutButton />
               </div>
             )}
@@ -101,16 +108,24 @@ export const Header = async () => {
                     {!session?.user ? (
                       <>
                         <SignInButton />
-                        <SignUpButton />
                       </>
                     ) : (
                       <div className="space-x-4">
-                        <Link
-                          href="/admin/dashboard"
-                          className="inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
-                        >
-                          Dashboard
-                        </Link>
+                        {session.user.role === "admin" ? (
+                          <Link
+                            href="/admin/dashboard"
+                            className="inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+                          >
+                            Dashboard
+                          </Link>
+                        ) : (
+                          <Link
+                            href="/buyer/dashboard"
+                            className="inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+                          >
+                            Dashboard
+                          </Link>
+                        )}
                         <SignOutButton />
                       </div>
                     )}
