@@ -26,8 +26,8 @@ export const Header = async () => {
     { name: "About", href: "/about" },
     { name: "Projects", href: "/projects" },
     { name: "News", href: "/news" },
-    { name: "FAQ", href: "/faq" },
-    { name: "Career", href: "/career" },
+    { name: "FAQ", href: "/faqs" },
+    { name: "Careers", href: "/careers" },
     { name: "Contact", href: "/contact" },
   ];
 
