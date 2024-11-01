@@ -30,6 +30,8 @@ import { useToast } from "@/hooks/use-toast";
 import useDialogConfigStore from "@/stores/dialog-store";
 import { TProject, TUnit } from "@/types";
 
+import { useCreateUnit } from "../apis/use-create-unit";
+
 const formSchema = z
   .object({
     name: z.string().trim().min(1, {
@@ -89,6 +91,7 @@ export const UnitForm = ({ data, projects }: UnitFormProps) => {
   const { toast } = useToast();
   const router = useRouter();
   const { setDialogConfig } = useDialogConfigStore();
+  const createUnit = useCreateUnit();
 
   const onSuccessHandler = (title: string, description: string) => {
     toast({
@@ -113,14 +116,14 @@ export const UnitForm = ({ data, projects }: UnitFormProps) => {
     console.log(values);
 
     if (!data) {
-      // createProject.mutate(values, {
-      //   onSuccess: (data) => {
-      //     onSuccessHandler("Create Project", data.message);
-      //   },
-      //   onError: (error) => {
-      //     onErrorHandler("Create Project", error.message);
-      //   },
-      // });
+      createUnit.mutate(values, {
+        onSuccess: (data) => {
+          onSuccessHandler("Create Unit", data.message);
+        },
+        onError: (error) => {
+          onErrorHandler("Create Unit", error.message);
+        },
+      });
     } else {
       // updateProject.mutate(
       //   {
@@ -265,7 +268,7 @@ export const UnitForm = ({ data, projects }: UnitFormProps) => {
             </FormItem>
           )}
         />
-        <SubmitButton isPending={false} />
+        <SubmitButton isPending={createUnit.isPending} />
         {form.getValues("imageKey") && (
           <div className="mx-auto max-w-2xl">
             <Image
