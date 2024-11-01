@@ -1,6 +1,5 @@
 import Image from "next/image";
-
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function HeroSection() {
   return (
@@ -23,12 +22,12 @@ export default function HeroSection() {
           trusted agents, all in one place. Your dream property is just a click
           away!
         </p>
-        <Button
-          size="lg"
-          className="bg-primary text-primary-foreground hover:bg-primary/90"
+        <Link
+          href="/projects"
+          className="mb-4 inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary px-8 py-2 font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
         >
           Start Your Search
-        </Button>
+        </Link>
       </div>
     </section>
   );
