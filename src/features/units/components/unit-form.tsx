@@ -28,7 +28,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { SubmitButton } from "@/features/common/components/submit-button";
 import { useToast } from "@/hooks/use-toast";
 import useDialogConfigStore from "@/stores/dialog-store";
-import { TUnit } from "@/types";
+import { TProject, TUnit } from "@/types";
 
 const formSchema = z
   .object({
@@ -53,12 +53,7 @@ const formSchema = z
       .min(0.01, "Minimum price must be greater than 0.")
       .max(9999999.99, "Maximum price cannot exceed 9,999,999.99.")
       .transform((val) => parseFloat(val.toFixed(2))),
-    lotArea: z.coerce
-      .number()
-      .positive({
-        message: "Lot area must be a positive number.",
-      })
-      .transform((val) => parseFloat(val.toFixed(2))),
+    lotArea: z.coerce.number().transform((val) => parseFloat(val.toFixed(2))),
     floorArea: z.coerce
       .number()
       .positive()
@@ -73,7 +68,12 @@ const formSchema = z
     path: ["maxPrice"],
   });
 
-export const UnitForm = ({ data }: { data?: TUnit }) => {
+type UnitFormProps = {
+  data?: TUnit;
+  projects: Array<TProject>;
+};
+
+export const UnitForm = ({ data, projects }: UnitFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -168,8 +168,11 @@ export const UnitForm = ({ data }: { data?: TUnit }) => {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="m@example.com">m@example.com</SelectItem>
-                  <SelectItem value="m@google.com">m@google.com</SelectItem>
+                  {projects.map((project) => (
+                    <SelectItem key={project.id} value={project.id}>
+                      {project.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <FormMessage />
