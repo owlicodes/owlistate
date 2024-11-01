@@ -80,6 +80,7 @@ export const UnitForm = ({ data, projects }: UnitFormProps) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: data ? data.name : "",
+      projectId: data ? data.projectId : "",
       specifications: data ? data.specifications : "",
       minPrice: data ? data.minPrice : 0,
       maxPrice: data ? data.maxPrice : 0,

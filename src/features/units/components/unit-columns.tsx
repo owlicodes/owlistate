@@ -90,7 +90,7 @@ export const columns: ColumnDef<TUnit & { project: TProject }>[] = [
       };
 
       const showEditProjectForm = () => {
-        // router.push(`/admin/projects/edit/${unit.id}`);
+        router.push(`/admin/units/edit/${unit.id}`);
       };
 
       const showDeleteUnitConfirmation = () => {
