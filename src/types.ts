@@ -12,6 +12,7 @@ export type TCreateUnit = Omit<
   Unit,
   "id" | "userId" | "createdAt" | "updatedAt"
 >;
+export type TUpdateUnit = TCreateUnit;
 
 export type TImage = {
   id: string;

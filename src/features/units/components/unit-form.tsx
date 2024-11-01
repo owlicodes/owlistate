@@ -31,6 +31,7 @@ import useDialogConfigStore from "@/stores/dialog-store";
 import { TProject, TUnit } from "@/types";
 
 import { useCreateUnit } from "../apis/use-create-unit";
+import { useUpdateUnit } from "../apis/use-update-unit";
 
 const formSchema = z
   .object({
@@ -93,6 +94,7 @@ export const UnitForm = ({ data, projects }: UnitFormProps) => {
   const router = useRouter();
   const { setDialogConfig } = useDialogConfigStore();
   const createUnit = useCreateUnit();
+  const updateUnit = useUpdateUnit();
 
   const onSuccessHandler = (title: string, description: string) => {
     toast({
@@ -126,20 +128,20 @@ export const UnitForm = ({ data, projects }: UnitFormProps) => {
         },
       });
     } else {
-      // updateProject.mutate(
-      //   {
-      //     projectId: data.id,
-      //     data: values,
-      //   },
-      //   {
-      //     onSuccess: (data) => {
-      //       onSuccessHandler("Update Project", data.message);
-      //     },
-      //     onError: (error) => {
-      //       onErrorHandler("Update Project", error.message);
-      //     },
-      //   }
-      // );
+      updateUnit.mutate(
+        {
+          unitId: data.id,
+          data: values,
+        },
+        {
+          onSuccess: (data) => {
+            onSuccessHandler("Update Unit", data.message);
+          },
+          onError: (error) => {
+            onErrorHandler("Update Unit", error.message);
+          },
+        }
+      );
     }
   };
 
@@ -269,7 +271,9 @@ export const UnitForm = ({ data, projects }: UnitFormProps) => {
             </FormItem>
           )}
         />
-        <SubmitButton isPending={createUnit.isPending} />
+        <SubmitButton
+          isPending={createUnit.isPending || updateUnit.isPending}
+        />
         {form.getValues("imageKey") && (
           <div className="mx-auto max-w-2xl">
             <Image
