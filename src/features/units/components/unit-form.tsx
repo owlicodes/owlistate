@@ -17,28 +17,29 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { SubmitButton } from "@/features/common/components/submit-button";
 import { useToast } from "@/hooks/use-toast";
 import useDialogConfigStore from "@/stores/dialog-store";
-import { TProject } from "@/types";
-
-import { useCreateProject } from "../apis/use-create-project";
-import { useUpdateProject } from "../apis/use-update-project";
+import { TUnit } from "@/types";
 
 const formSchema = z
   .object({
     name: z.string().trim().min(1, {
       message: "Name is required.",
     }),
-    overview: z.string().trim().min(1, {
-      message: "Overview is required.",
+    projectId: z.string().min(1, {
+      message: "Project is required.",
     }),
-    location: z.string().trim().min(1, {
-      message: "Location is required.",
-    }),
-    keyLocations: z.string().trim().min(1, {
-      message: "Key locations is required.",
+    specifications: z.string().trim().min(1, {
+      message: "Specifications is required.",
     }),
     minPrice: z.coerce
       .number()
@@ -52,14 +53,17 @@ const formSchema = z
       .min(0.01, "Minimum price must be greater than 0.")
       .max(9999999.99, "Maximum price cannot exceed 9,999,999.99.")
       .transform((val) => parseFloat(val.toFixed(2))),
-    amenities: z.string().trim().min(1, {
-      message: "Amenities is required.",
-    }),
-    totalUnits: z.coerce
+    lotArea: z.coerce
+      .number()
+      .positive({
+        message: "Lot area must be a positive number.",
+      })
+      .transform((val) => parseFloat(val.toFixed(2))),
+    floorArea: z.coerce
       .number()
       .positive()
-      .min(1, "Minimum total unit must be greater than 0.")
-      .max(10000, "Maximum total units exceeds 10,000."),
+      .min(1, "Minimum total floor area must be greater than 0.")
+      .transform((val) => parseFloat(val.toFixed(2))),
     imageKey: z.string().trim().min(1, {
       message: "Image key is required.",
     }),
@@ -69,25 +73,21 @@ const formSchema = z
     path: ["maxPrice"],
   });
 
-export const ProjectForm = ({ data }: { data?: TProject }) => {
+export const UnitForm = ({ data }: { data?: TUnit }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: data ? data.name : "",
-      overview: data ? data.overview : "",
-      location: data ? data.location : "",
-      keyLocations: data ? data.keyLocations : "",
+      specifications: data ? data.specifications : "",
       minPrice: data ? data.minPrice : 0,
       maxPrice: data ? data.maxPrice : 0,
-      amenities: data ? data.amenities : "",
-      totalUnits: data ? data.totalUnits : 0,
+      lotArea: data?.lotArea ? data.lotArea : 0,
+      floorArea: data?.floorArea ? data.floorArea : 0,
       imageKey: data?.imageKey ? data.imageKey : "",
     },
   });
   const { toast } = useToast();
   const router = useRouter();
-  const createProject = useCreateProject();
-  const updateProject = useUpdateProject();
   const { setDialogConfig } = useDialogConfigStore();
 
   const onSuccessHandler = (title: string, description: string) => {
@@ -110,30 +110,32 @@ export const ProjectForm = ({ data }: { data?: TProject }) => {
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    console.log(values);
+
     if (!data) {
-      createProject.mutate(values, {
-        onSuccess: (data) => {
-          onSuccessHandler("Create Project", data.message);
-        },
-        onError: (error) => {
-          onErrorHandler("Create Project", error.message);
-        },
-      });
+      // createProject.mutate(values, {
+      //   onSuccess: (data) => {
+      //     onSuccessHandler("Create Project", data.message);
+      //   },
+      //   onError: (error) => {
+      //     onErrorHandler("Create Project", error.message);
+      //   },
+      // });
     } else {
-      updateProject.mutate(
-        {
-          projectId: data.id,
-          data: values,
-        },
-        {
-          onSuccess: (data) => {
-            onSuccessHandler("Update Project", data.message);
-          },
-          onError: (error) => {
-            onErrorHandler("Update Project", error.message);
-          },
-        }
-      );
+      // updateProject.mutate(
+      //   {
+      //     projectId: data.id,
+      //     data: values,
+      //   },
+      //   {
+      //     onSuccess: (data) => {
+      //       onSuccessHandler("Update Project", data.message);
+      //     },
+      //     onError: (error) => {
+      //       onErrorHandler("Update Project", error.message);
+      //     },
+      //   }
+      // );
     }
   };
 
@@ -155,42 +157,37 @@ export const ProjectForm = ({ data }: { data?: TProject }) => {
         />
         <FormField
           control={form.control}
-          name="overview"
+          name="projectId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Overview</FormLabel>
-              <FormControl>
-                <Textarea rows={5} className="resize-none" {...field} />
-              </FormControl>
+              <FormLabel>Project</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Project" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="m@example.com">m@example.com</SelectItem>
+                  <SelectItem value="m@google.com">m@google.com</SelectItem>
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
         />
         <FormField
           control={form.control}
-          name="location"
+          name="specifications"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Location</FormLabel>
-              <FormControl>
-                <Input autoComplete="off" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="keyLocations"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Key Locations</FormLabel>
+              <FormLabel>Specifications</FormLabel>
               <FormControl>
                 <Textarea rows={5} className="resize-none" {...field} />
               </FormControl>
               <FormDescription>
-                Each key location should be comma separated. Example: 7km away
-                from Hospital, 5km away from School
+                Each specification should be comma separated. Example: Living
+                Area, Dining Area
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -224,36 +221,34 @@ export const ProjectForm = ({ data }: { data?: TProject }) => {
             )}
           />
         </div>
-        <FormField
-          control={form.control}
-          name="amenities"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Amenities</FormLabel>
-              <FormControl>
-                <Textarea rows={5} className="resize-none" {...field} />
-              </FormControl>
-              <FormDescription>
-                Each amenity should be comma separated. Example: Club House, Gym
-                Area
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="totalUnits"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Total Units</FormLabel>
-              <FormControl>
-                <Input autoComplete="off" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="flex items-center gap-4">
+          <FormField
+            control={form.control}
+            name="lotArea"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Lot Area</FormLabel>
+                <FormControl>
+                  <Input autoComplete="off" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="floorArea"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Floor Area</FormLabel>
+                <FormControl>
+                  <Input autoComplete="off" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
         <FormField
           control={form.control}
           name="imageKey"
@@ -267,9 +262,7 @@ export const ProjectForm = ({ data }: { data?: TProject }) => {
             </FormItem>
           )}
         />
-        <SubmitButton
-          isPending={createProject.isPending || updateProject.isPending}
-        />
+        <SubmitButton isPending={false} />
         {form.getValues("imageKey") && (
           <div className="mx-auto max-w-2xl">
             <Image

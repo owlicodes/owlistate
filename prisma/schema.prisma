@@ -96,8 +96,9 @@ model Unit {
   specifications String
   minPrice       Int
   maxPrice       Int
-  lotArea        String?
-  floorArea      String?
+  lotArea        Int?
+  floorArea      Int?
+  imageKey       String
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
