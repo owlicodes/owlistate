@@ -94,7 +94,7 @@ export const UnitForm = ({ data, projects }: UnitFormProps) => {
   const router = useRouter();
   const { setDialogConfig } = useDialogConfigStore();
   const createUnit = useCreateUnit();
-  const updateUnit = useUpdateUnit();
+  const updateUnit = useUpdateUnit(data?.id);
 
   const onSuccessHandler = (title: string, description: string) => {
     toast({
@@ -102,8 +102,11 @@ export const UnitForm = ({ data, projects }: UnitFormProps) => {
       description,
     });
 
+    if (!data) {
+      form.reset();
+    }
+
     router.refresh();
-    form.reset();
     setDialogConfig(undefined);
   };
 
@@ -116,8 +119,6 @@ export const UnitForm = ({ data, projects }: UnitFormProps) => {
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
-
     if (!data) {
       createUnit.mutate(values, {
         onSuccess: (data) => {

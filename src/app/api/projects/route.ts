@@ -5,6 +5,32 @@ import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { TCreateProject } from "@/types";
 
+export async function GET() {
+  try {
+    const session = await auth.api.getSession({
+      headers: headers(),
+    });
+
+    if (session?.user.role !== "admin") {
+      return NextResponse.json(
+        { message: "User not authorized to perform this action" },
+        { status: 401 }
+      );
+    }
+
+    const projects = await prisma.project.findMany();
+
+    return NextResponse.json(projects);
+  } catch (error: unknown) {
+    console.log("Get projects failed: ", error);
+
+    return NextResponse.json(
+      { message: "Unable to get projects, please see server logs." },
+      { status: 500 }
+    );
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const data = (await request.json()) as TCreateProject;

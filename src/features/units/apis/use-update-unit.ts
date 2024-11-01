@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 import { TUpdateUnit } from "@/types";
@@ -18,9 +18,15 @@ const updateUnit = ({
     });
 };
 
-export const useUpdateUnit = () => {
+export const useUpdateUnit = (unitId: string | undefined) => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: updateUnit,
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: ["units", unitId],
+      }),
     onError: (error: { message: string }) => {
       return error;
     },

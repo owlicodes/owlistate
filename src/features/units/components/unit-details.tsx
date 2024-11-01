@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 
 import { Spinner } from "@/features/common/components/spinner";
+import { useProjects } from "@/features/projects/apis/use-projects";
 
 import { useUnitDetails } from "../apis/use-unit-details";
 import { UnitForm } from "./unit-form";
@@ -10,8 +11,9 @@ import { UnitForm } from "./unit-form";
 export const UnitDetails = () => {
   const { unitId } = useParams();
   const unit = useUnitDetails(unitId as string);
+  const projects = useProjects();
 
-  if (unit.isLoading) {
+  if (unit.isLoading || projects.isLoading) {
     return (
       <div className="flex w-full items-center justify-center">
         <Spinner />
@@ -29,7 +31,7 @@ export const UnitDetails = () => {
 
   return (
     <div>
-      <UnitForm projects={[]} data={unit.data} />
+      <UnitForm projects={projects.data || []} data={unit.data} />
     </div>
   );
 };
