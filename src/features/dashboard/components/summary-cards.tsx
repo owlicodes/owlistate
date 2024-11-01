@@ -1,8 +1,18 @@
 import { Building, Building2, Home } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import prisma from "@/lib/prisma";
 
-export default function SummaryCards() {
+export default async function SummaryCards() {
+  const projects = await prisma.project.count();
+  const units = await prisma.unit.count();
+  const totalUnitsSum = await prisma.project.aggregate({
+    _sum: {
+      totalUnits: true,
+    },
+  });
+  const totalUnits = totalUnitsSum._sum.totalUnits;
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       <Card className="shadow-md">
@@ -11,7 +21,7 @@ export default function SummaryCards() {
           <Building className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">100</div>
+          <div className="text-2xl font-bold">{projects}</div>
         </CardContent>
       </Card>
       <Card className="shadow-md">
@@ -22,7 +32,7 @@ export default function SummaryCards() {
           <Home className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">200</div>
+          <div className="text-2xl font-bold">{units}</div>
         </CardContent>
       </Card>
       <Card className="shadow-md">
@@ -33,7 +43,7 @@ export default function SummaryCards() {
           <Building2 className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">300</div>
+          <div className="text-2xl font-bold">{totalUnits}</div>
         </CardContent>
       </Card>
     </div>
