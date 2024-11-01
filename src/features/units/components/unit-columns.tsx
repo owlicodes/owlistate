@@ -19,6 +19,8 @@ import { formatCurrency } from "@/lib/utils";
 import useDialogConfigStore from "@/stores/dialog-store";
 import { TProject, TUnit } from "@/types";
 
+import { useDeleteUnit } from "../apis/use-delete-unit";
+
 /* eslint-disable react-hooks/rules-of-hooks */
 
 export const columns: ColumnDef<TUnit & { project: TProject }>[] = [
@@ -67,26 +69,27 @@ export const columns: ColumnDef<TUnit & { project: TProject }>[] = [
       const { setDialogConfig } = useDialogConfigStore();
       const { toast } = useToast();
       const router = useRouter();
+      const deleteUnit = useDeleteUnit();
 
       const deleteCallback = () => {
-        // deleteProject.mutate(unit.id, {
-        //   onSuccess: (data) => {
-        //     toast({
-        //       title: "Delete Project",
-        //       description: data.message,
-        //     });
-        //     router.refresh();
-        //     setDialogConfig(undefined);
-        //   },
-        //   onError: (error) => {
-        //     toast({
-        //       title: "Delete Project",
-        //       description: error.message,
-        //       variant: "destructive",
-        //     });
-        //     setDialogConfig(undefined);
-        //   },
-        // });
+        deleteUnit.mutate(unit.id, {
+          onSuccess: (data) => {
+            toast({
+              title: "Delete Unit",
+              description: data.message,
+            });
+            router.refresh();
+            setDialogConfig(undefined);
+          },
+          onError: (error) => {
+            toast({
+              title: "Delete Unit",
+              description: error.message,
+              variant: "destructive",
+            });
+            setDialogConfig(undefined);
+          },
+        });
       };
 
       const showEditProjectForm = () => {

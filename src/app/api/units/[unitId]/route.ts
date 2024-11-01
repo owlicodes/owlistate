@@ -80,3 +80,37 @@ export async function PATCH(request: Request, { params }: Params) {
     );
   }
 }
+
+export async function DELETE(request: Request, { params }: Params) {
+  try {
+    const { unitId } = params;
+
+    const session = await auth.api.getSession({
+      headers: headers(),
+    });
+
+    if (session?.user.role !== "admin") {
+      return NextResponse.json(
+        { message: "User not authorized to perform this action" },
+        { status: 401 }
+      );
+    }
+
+    await prisma.unit.delete({
+      where: {
+        id: unitId,
+      },
+    });
+
+    return NextResponse.json({
+      message: "Unit deleted successfully",
+    });
+  } catch (error: unknown) {
+    console.log("Delete unit failed: ", error);
+
+    return NextResponse.json(
+      { message: "Unable to delete unit, please see server logs." },
+      { status: 500 }
+    );
+  }
+}
