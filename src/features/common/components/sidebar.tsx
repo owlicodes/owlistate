@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import {
   Blocks,
   ChevronUp,
+  Cuboid,
   Home,
   Images,
   LayoutDashboard,
@@ -44,6 +45,11 @@ const items = [
     title: "Projects",
     url: "/admin/projects",
     icon: Blocks,
+  },
+  {
+    title: "Units",
+    url: "/admin/units",
+    icon: Cuboid,
   },
   {
     title: "Images",
