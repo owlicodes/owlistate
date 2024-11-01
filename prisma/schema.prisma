@@ -25,6 +25,7 @@ model User {
   Account Account[]
 
   projects Project[]
+  units    Unit[]
 
   @@map("users")
 }
@@ -84,5 +85,27 @@ model Project {
   user   User   @relation(fields: [userId], references: [id])
   userId String
 
+  units Unit[]
+
   @@map("project")
+}
+
+model Unit {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  specifications String
+  minPrice       Int
+  maxPrice       Int
+  lotArea        String?
+  floorArea      String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId String  @db.ObjectId
+
+  @@map("unit")
 }
