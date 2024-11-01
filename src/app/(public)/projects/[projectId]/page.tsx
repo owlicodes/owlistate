@@ -1,4 +1,8 @@
+import { Suspense } from "react";
+
+import { Spinner } from "@/features/common/components/spinner";
 import { PublicProjectDetails } from "@/features/projects/components/public-project-details";
+import { PublicUnitsList } from "@/features/units/components/public-units-list";
 import prisma from "@/lib/prisma";
 
 export default async function ProjectDetailsPage({
@@ -23,5 +27,13 @@ export default async function ProjectDetailsPage({
     );
   }
 
-  return <PublicProjectDetails project={project} />;
+  return (
+    <div>
+      <PublicProjectDetails project={project} />
+
+      <Suspense fallback={<Spinner />}>
+        <PublicUnitsList projectId={params.projectId} />
+      </Suspense>
+    </div>
+  );
 }
