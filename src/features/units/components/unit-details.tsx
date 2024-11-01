@@ -1,16 +1,25 @@
-import prisma from "@/lib/prisma";
+"use client";
 
+import { useParams } from "next/navigation";
+
+import { Spinner } from "@/features/common/components/spinner";
+
+import { useUnitDetails } from "../apis/use-unit-details";
 import { UnitForm } from "./unit-form";
 
-export const UnitDetails = async ({ unitId }: { unitId: string }) => {
-  const projects = await prisma.project.findMany();
-  const unit = await prisma.unit.findFirst({
-    where: {
-      id: unitId,
-    },
-  });
+export const UnitDetails = () => {
+  const { unitId } = useParams();
+  const unit = useUnitDetails(unitId as string);
 
-  if (!unit) {
+  if (unit.isLoading) {
+    return (
+      <div className="flex w-full items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (!unit.data) {
     return (
       <div>
         <p>Unable to fetch unit details.</p>
@@ -20,7 +29,7 @@ export const UnitDetails = async ({ unitId }: { unitId: string }) => {
 
   return (
     <div>
-      <UnitForm projects={projects} data={unit} />
+      <UnitForm projects={[]} data={unit.data} />
     </div>
   );
 };

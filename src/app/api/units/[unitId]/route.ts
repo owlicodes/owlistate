@@ -11,6 +11,38 @@ interface Params {
   };
 }
 
+export async function GET(request: Request, { params }: Params) {
+  try {
+    const { unitId } = params;
+
+    const session = await auth.api.getSession({
+      headers: headers(),
+    });
+
+    if (session?.user.role !== "admin") {
+      return NextResponse.json(
+        { message: "User not authorized to perform this action" },
+        { status: 401 }
+      );
+    }
+
+    const unit = await prisma.unit.findFirst({
+      where: {
+        id: unitId,
+      },
+    });
+
+    return NextResponse.json(unit);
+  } catch (error: unknown) {
+    console.log("Fetch unit failed: ", error);
+
+    return NextResponse.json(
+      { message: "Unable to fetch unit, please see server logs." },
+      { status: 500 }
+    );
+  }
+}
+
 export async function PATCH(request: Request, { params }: Params) {
   try {
     const { unitId } = params;
