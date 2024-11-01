@@ -96,11 +96,27 @@ export async function DELETE(request: Request, { params }: Params) {
       );
     }
 
-    await prisma.project.delete({
+    const unit = await prisma.unit.findFirst({
       where: {
-        id: projectId,
+        projectId,
       },
     });
+
+    if (unit) {
+      return NextResponse.json(
+        {
+          message:
+            "Unable to delete project, a unit is currently attached to this project.",
+        },
+        { status: 400 }
+      );
+    } else {
+      await prisma.project.delete({
+        where: {
+          id: projectId,
+        },
+      });
+    }
 
     return NextResponse.json({
       message: "Project deleted successfully",
