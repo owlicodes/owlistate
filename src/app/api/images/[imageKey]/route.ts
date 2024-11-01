@@ -42,6 +42,22 @@ export async function DELETE(request: Request, { params }: Params) {
       );
     }
 
+    const unit = await prisma.unit.findFirst({
+      where: {
+        imageKey,
+      },
+    });
+
+    if (unit) {
+      return NextResponse.json(
+        {
+          message:
+            "A unit is using this image, please update the unit first before deleting this image.",
+        },
+        { status: 400 }
+      );
+    }
+
     await utapi.deleteFiles(imageKey);
 
     return NextResponse.json({
