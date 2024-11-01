@@ -17,14 +17,18 @@ import { DeleteContent } from "@/features/common/components/delete-content";
 import { useToast } from "@/hooks/use-toast";
 import { formatCurrency } from "@/lib/utils";
 import useDialogConfigStore from "@/stores/dialog-store";
-import { TUnit } from "@/types";
+import { TProject, TUnit } from "@/types";
 
 /* eslint-disable react-hooks/rules-of-hooks */
 
-export const columns: ColumnDef<TUnit>[] = [
+export const columns: ColumnDef<TUnit & { project: TProject }>[] = [
   {
     accessorKey: "name",
     header: "Name",
+  },
+  {
+    accessorKey: "project.name",
+    header: "Project",
   },
   {
     accessorKey: "minPrice",
